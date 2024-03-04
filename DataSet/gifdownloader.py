@@ -1,7 +1,9 @@
+import io
 import os.path
 import re
 import time
 
+import PIL.Image
 import  requests
 if __name__=="__main__":
     # lol
@@ -12,7 +14,16 @@ if __name__=="__main__":
     for m in re.findall(pattern, str(contains_gifs.content, 'utf-8')):
         what_to_download = m
         file = open(os.path.join("ludziki",os.path.basename(what_to_download)), 'wb')
-        file.write(requests.get(what_to_download).content)
+
+        content = requests.get(what_to_download).content
+
+        try:
+            #sometimes jpgs are corrupted and if it cannot be read just continue
+            PIL.Image.open(io.BytesIO(content))
+        except:
+            continue
+
+        file.write(content)
         file.flush()
         file.close()
         download_int += 1

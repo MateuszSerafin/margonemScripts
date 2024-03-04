@@ -30,7 +30,7 @@ class Net(nn.Module):
 
 
 if __name__=="__main__":
-    PATH = './cifar_net.pth'
+    PATH = './good_model_resnet.pth'
     net = Net()
     net.load_state_dict(torch.load(PATH))
     onnx_path = "model.onnx"

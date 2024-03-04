@@ -73,7 +73,7 @@ if __name__=="__main__":
     for i in range(100000):
         print(i)
 
-        do_i_use_colored_background = random.random() < 0.7
+        do_i_use_colored_background = (random.random() > 0.7)
         background = None
 
         if(do_i_use_colored_background):
@@ -81,7 +81,7 @@ if __name__=="__main__":
             background = individual_backgrounds[what_background].copy()
         else:
             #MOST OF dataset should have empty background
-            background = individual_backgrounds.append(PIL.Image.new(mode="RGBA", size=(100, 100)))
+            background = PIL.Image.new(mode="RGBA", size=(100, 100))
         what_ludzik = random.randint(0, len(individual_ludziki) - 1)
 
         ludzik = individual_ludziki[what_ludzik].copy()
@@ -160,6 +160,16 @@ if __name__=="__main__":
                     draw_on_it.rectangle((x_rand,y_rand, endy_rand, endx_rand),outline=(R,G,B), width=1)
                 how_many -= 1
         background = background.convert("RGB")
+
+        #random resize to match have better matches?
+        #there were issues i think my dataset had too good quality and model didnt knew what tdo do with poor quality images
+        down_sample_x = random.randint(60, 90)
+        down_sample_y = random.randint(60, 90)
+        background = background.resize((down_sample_x,down_sample_y))
+
+        #upsample up to 100x100 what my model uses
+        background = background.resize((100,100))
+
         if(is_up_side_down):
             background.save(os.path.join("actualdataset", "match", str(i) + ".jpg"))
         else:
